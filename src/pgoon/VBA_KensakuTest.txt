@@ -1,0 +1,34 @@
+Public tmpHoshoNo As String
+Public rowNum As Integer
+
+'##############################
+' 検索ボタン機能
+'##############################
+Private Sub kensakuBtn_Click()
+    
+    'シート保護を解除
+    ActiveSheet.Unprotect
+    
+    Dim c As Range
+    Dim maxCellRow As Integer
+    
+    maxCellRow = Worksheets("火災保険情報").Range("B5").End(xlDown).row
+    
+    If rowNum = 0 Or tmpHoshoNo <> hoshoBango.Text Then
+        rowNum = 5
+    End If
+    
+    Set c = Range("B" & rowNum & ":B30").Find(what:=hoshoBango.Text, LookAt:=xlWhole)
+    
+    If Not c Is Nothing Then
+        
+        rowNum = c.row
+        tmpHoshoNo = hoshoBango.Text
+        c.Activate
+        
+    
+    Else
+        MsgBox "検索結果なし"
+    End If
+    
+End Sub

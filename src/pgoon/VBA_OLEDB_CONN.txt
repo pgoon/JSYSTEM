@@ -1,0 +1,108 @@
+Option Explicit
+
+Private Const STR_PROVIDER As String = "Microsoft.Jet.OLEDB.4.0"
+Private Const STR_DB_PATH As String = "C:\VBA\sample.mdb"
+Private Const STR_ENGINE_TYPE As String = "5"
+
+Public Sub createDb()
+    
+    Dim strConnectionString As String
+    strConnectionString = "Provider=" & STR_PROVIDER & ";Data Source=" & STR_DB_PATH & ";Jet OLEDB:Engine Type=" & STR_ENGINE_TYPE & ";"
+    
+    Dim objAdoCat As Object
+    Set objAdoCat = CreateObject("ADOX.Catalog")
+    objAdoCat.Create ConnectString:=strConnectionString
+    
+    Set objAdoCat = Nothing
+    
+End Sub
+
+Public Sub createTable()
+    
+    Dim strConnectionString As String
+    strConnectionString = "Provider=" & STR_PROVIDER & ";Data Source=" & STR_DB_PATH & ";"
+    
+    Dim strSql As String
+    strSql = "CREATE TABLE MEMBERS (ID VARCHAR(6) PRIMARY KEY, NAME VARCHAR(50)) "
+    
+    Dim objAdoConn As Object
+    Set objAdoConn = CreateObject("ADODB.Connection")
+    objAdoConn.Open ConnectionString:=strConnectionString
+    
+    Dim objAdoCmd As Object
+    Set objAdoCmd = CreateObject("ADODB.Command")
+    
+    With objAdoCmd
+        .ActiveConnection = objAdoConn
+        .CommandText = strSql
+        .Execute
+    End With
+    
+    Set objAdoCmd = Nothing
+    objAdoConn.Close: Set objAdoConn = Nothing
+    
+End Sub
+
+Public Sub insertTable()
+    
+    Dim strConnectionString As String
+    strConnectionString = "Provider=" & STR_PROVIDER & ";Data Source=" & STR_DB_PATH & ";"
+    
+    Dim objAdoConn As Object
+    Set objAdoConn = CreateObject("ADODB.Connection")
+    objAdoConn.Open ConnectionString:=strConnectionString
+    
+    Dim objAdoCmd As Object
+    Set objAdoCmd = CreateObject("ADODB.Command")
+    
+    Dim i As Long
+    Dim strSql As String
+    For i = 1 To 3
+        strSql = "INSERT INTO MEMBERS VALUES ('TST00" & i & "', 'テスト" & i & "') "
+        With objAdoCmd
+            .ActiveConnection = objAdoConn
+            .CommandText = strSql
+            .Execute
+        End With
+    Next i
+    
+    Set objAdoCmd = Nothing
+    objAdoConn.Close: Set objAdoConn = Nothing
+    
+End Sub
+
+Public Sub selectTable()
+    
+    Dim strConnectionString As String
+    strConnectionString = "Provider=" & STR_PROVIDER & ";Data Source=" & STR_DB_PATH & ";"
+    
+    Dim strSql As String
+    strSql = "SELECT * FROM MEMBERS"
+    
+    Dim objAdoConn As Object
+    Set objAdoConn = CreateObject("ADODB.Connection")
+    objAdoConn.Open ConnectionString:=strConnectionString
+    
+    Dim objAdoRs As Object
+    Set objAdoRs = CreateObject("ADODB.Recordset")
+    
+    Dim objAdoCmd As Object
+    Set objAdoCmd = CreateObject("ADODB.Command")
+    
+    With objAdoCmd
+        .ActiveConnection = objAdoConn
+        .CommandText = strSql
+        Set objAdoRs = .Execute
+    End With
+    
+    Do Until objAdoRs.EOF
+        Debug.Print "ID: " & objAdoRs("ID").Value & "; NAME: " & objAdoRs("NAME").Value
+        objAdoRs.MoveNext
+    Loop
+    
+    Set objAdoCmd = Nothing
+    objAdoRs.Close: Set objAdoRs = Nothing
+    objAdoConn.Close: Set objAdoConn = Nothing
+    
+End Sub
+

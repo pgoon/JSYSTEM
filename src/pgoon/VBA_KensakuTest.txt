@@ -1,32 +1,28 @@
-Public tmpHoshoNo As String
+Public tmpKensakuData As String
 Public rowNum As Integer
 
 '##############################
-' 検索ボタン機能
+' 検索ボタン機能 
 '##############################
 Private Sub kensakuBtn_Click()
-    
-    'シート保護を解除
-    ActiveSheet.Unprotect
     
     Dim c As Range
     Dim maxCellRow As Integer
     
-    maxCellRow = Worksheets("火災保険情報").Range("B5").End(xlDown).row
+    maxCellRow = Worksheets("Sheet1").Range("A1").End(xlDown).row
     
-    If rowNum = 0 Or tmpHoshoNo <> hoshoBango.Text Then
-        rowNum = 5
+    If rowNum = 0 Or tmpKensakuData <> "検索値" Then          '"検索値" ← 検索対象の値
+        rowNum = 1　　' A1のセルから
     End If
     
-    Set c = Range("B" & rowNum & ":B30").Find(what:=hoshoBango.Text, LookAt:=xlWhole)
+    Set c = Range("A" & rowNum & ":A100").Find(what:="検索値", LookAt:=xlWhole)
     
     If Not c Is Nothing Then
         
         rowNum = c.row
-        tmpHoshoNo = hoshoBango.Text
-        c.Activate
+        tmpKensakuData = "検索値"
+        c.Activate　　　　　　　　　'対象のセルにカーソルを異動する。
         
-    
     Else
         MsgBox "検索結果なし"
     End If

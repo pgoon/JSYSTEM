@@ -9,7 +9,7 @@ Private Sub kensakuBtn_Click()
     Dim c As Range
     Dim maxCellRow As Integer
     
-    maxCellRow = Worksheets("Sheet1").Range("A1").End(xlDown).row
+    maxCellRow = Worksheets("Sheet1").Range("A65536").End(xlUp).row
     
     If rowNum = 0 Or tmpKensakuData <> "検索値" Then          '"検索値" ← 検索対象の値
         rowNum = 1　　' A1のセルから

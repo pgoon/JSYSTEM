@@ -1,0 +1,38 @@
+package pgoon.java8.test.main;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.SequenceInputStream;
+
+public class FileSystemTest {
+
+	public static void main(String[] args) throws IOException {
+
+		SequenceInputStream abSequence = null;
+
+		try{
+
+			FileInputStream aFile = new FileInputStream("D:\\test\\test1.txt");
+			FileInputStream bFile = new FileInputStream("D:\\test\\test2.txt");
+
+			abSequence = new SequenceInputStream(aFile, bFile);
+
+			BufferedReader br = new BufferedReader(new InputStreamReader( abSequence, "MS932"));
+
+			String str;
+			while((str = br.readLine()) != null){
+				System.out.println(str);
+			}
+
+
+		} finally{
+			if(abSequence != null){
+				abSequence.close();
+			}
+		}
+
+	}
+
+}
